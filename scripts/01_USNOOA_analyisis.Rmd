@@ -21,6 +21,7 @@ library(tidyverse)
 library(table1)
 library(modelr)
 library(moderndive)
+library(naniar)
 ```
 
 
@@ -38,6 +39,11 @@ stormdata <- read.csv("./data/rawdata/repdata_data_StormData.csv.bz2", header = 
 stormdata <- as_tibble(stormdata)   # Convert to tibbles to easen work
 stormdata
 
+#--- Change the column names to lower
+
+names(stormdata) <- str_to_lower(names(stormdata))
+
+
 dim(stormdata)                     # Dimensions of the dataset
 head(stormdata)                    # Have a look at first six rows
 tail(stormdata)                    # Have a look at the last six rows
@@ -48,9 +54,48 @@ summary(stormdata)                 # General summary of the whole dataset
 
 #---- Variable transformation
 
+#-- Dates and times 
+
+stormdata %>% 
+  select(matches("[Dd]ate"), contains("date"))
+
+
+stormdata$bgn_date <-   as.Date(stormdata$bgn_date, "%m/%d/%Y %H:%M:%S")
+stormdata
+
+
+
+#--- Missing values 
+miss_var_table(stormdata)
+
+miss_var_summary(stormdata)
+
+stormdata %>% 
+  miss_var_summary %>% 
+  filter( pct_miss>= 90)
+
+stormdata %>% 
+  add_prop_miss() %>% 
+  arrange(desc(prop_miss_all)) %>% 
+  mutate(prop_miss_all = round(prop_miss_all * 100), 1) %>% 
+  select(prop_miss_all)
+
+
+gg_miss_var(stormdata) + labs(y = "Look at all the missing ones") + theme_bw() + theme(
+  axis.title.y = element_text(size = "8")
+)
+
+#-- Drop the single variable with all missing observations
+  
+stormdata <- select(stormdata, -countyendn)
+
+
+#-- Check whether there are duplicates in the dataset
+sum(duplicated(stormdata))
 
 ```
 
+Clearly this dataset is is not largely affected by the missing values. About 90% of the variables have no missing. To add on that the highest missing observed in a given observation was 11%. This again indicates that the data collection was well done This definitely indicates high level of completeness of data. 
 
-
+We have `r sum(duplicated(stormdata))` duplicates in the entire dataset.
 
