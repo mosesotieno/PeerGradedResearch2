@@ -9,3 +9,26 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+```{r Libraries,include=F}
+#--- Libraries
+library(kableExtra)
+library(gt)
+library(gtsummary)
+library(magrittr)
+library(lubridate)
+library(tidyverse)
+library(table1)
+library(modelr)
+library(moderndive)
+```
+
+
+
+```{r importdata, cache=TRUE}
+
+stormdata <- read.csv("./data/rawdata/repdata_data_StormData.csv.bz2", header = TRUE, sep = ",", quote = "\"")
+```
+
+
+
