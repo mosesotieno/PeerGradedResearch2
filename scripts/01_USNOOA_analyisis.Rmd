@@ -30,5 +30,27 @@ library(moderndive)
 stormdata <- read.csv("./data/rawdata/repdata_data_StormData.csv.bz2", header = TRUE, sep = ",", quote = "\"")
 ```
 
+### Data Preprocessing
+
+```{r data_preparation}
+#---- Have a look at raw data
+
+stormdata <- as_tibble(stormdata)   # Convert to tibbles to easen work
+stormdata
+
+dim(stormdata)                     # Dimensions of the dataset
+head(stormdata)                    # Have a look at first six rows
+tail(stormdata)                    # Have a look at the last six rows
+
+sample_n(stormdata, 10)            # Sample 10 observations
+glimpse(stormdata)                 # Structure of the dataset
+summary(stormdata)                 # General summary of the whole dataset
+
+#---- Variable transformation
+
+
+```
+
+
 
 
